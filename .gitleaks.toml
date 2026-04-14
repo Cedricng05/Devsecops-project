@@ -3,5 +3,5 @@ title = "Custom Gitleaks Config"
 [[rules]]
 id = "test-api-key"
 description = "Test API Key"
-regex = '''wJalr[0-9A-Z]{16}'''
+regex = '''AKIA[0-9A-Z]{16}'''
 tags = ["key", "AWS"]
