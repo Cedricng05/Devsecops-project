@@ -1,7 +1,11 @@
-FROM node:20-alpine
+FROM node:16
 
 WORKDIR /app
 
-COPY . .
+COPY app/ .
 
-CMD ["echo", "Hello DevSecOps"]
+RUN npm install
+
+EXPOSE 3000
+
+CMD ["node", "index.js"]
