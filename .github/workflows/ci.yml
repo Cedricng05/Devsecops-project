@@ -20,6 +20,8 @@ jobs:
           scan-type: fs
           format: table
           exit-code: 0
+          skip-dirs: .git
+          skip-files: .env
 
       - name: Trivy Image Scan
         uses: aquasecurity/trivy-action@master
