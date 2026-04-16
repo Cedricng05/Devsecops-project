@@ -1,0 +1,6 @@
+projectKey=sonarQube-Project
+serverUrl=http://localhost:49160
+serverVersion=26.4.0.121862
+dashboardUrl=http://localhost:49160/dashboard?id=sonarQube-Project
+ceTaskId=a3c4f761-2ab8-4f04-9600-a793312d22a1
+ceTaskUrl=http://localhost:49160/api/ce/task?id=a3c4f761-2ab8-4f04-9600-a793312d22a1
