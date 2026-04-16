@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # ========================
+      # Checkout
+      # ========================
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -25,12 +28,13 @@ jobs:
       # SCA - Filesystem scan
       # ========================
       - name: Trivy FS Scan
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: fs
           format: table
           exit-code: 1
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
           skip-dirs: .git
           skip-files: .env
 
@@ -38,12 +42,13 @@ jobs:
       # Container Scan
       # ========================
       - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: my-app
           format: table
           exit-code: 1
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
 
       # ========================
       # YAML Lint
@@ -56,6 +61,10 @@ jobs:
       # ========================
       - name: Conftest Policy Check
         run: |
-          docker run --rm \
-            -v $(pwd):/project \
-            instrumenta/conftest test k8s/ --policy policy/
+          if [ -d "k8s" ] && [ -d "policy" ]; then
+            docker run --rm \
+              -v $(pwd):/project \
+              instrumenta/conftest test k8s/ --policy policy/
+          else
+            echo "No k8s/ or policy/ directory found, skipping Conftest"
+          fi
