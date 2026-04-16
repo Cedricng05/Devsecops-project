@@ -1,7 +1,11 @@
+---
 name: DevSecOps Pipeline
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   security:
@@ -11,28 +15,47 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # ========================
+      # Build Docker Image
+      # ========================
       - name: Build Docker image
         run: docker build -t my-app .
 
+      # ========================
+      # SCA - Filesystem scan
+      # ========================
       - name: Trivy FS Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: fs
           format: table
-          exit-code: 0
+          exit-code: 1
+          severity: CRITICAL,HIGH
           skip-dirs: .git
           skip-files: .env
 
+      # ========================
+      # Container Scan
+      # ========================
       - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: my-app
           format: table
-          exit-code: 0
+          exit-code: 1
+          severity: CRITICAL,HIGH
 
+      # ========================
+      # YAML Lint
+      # ========================
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
 
+      # ========================
+      # Compliance as Code (OPA)
+      # ========================
       - name: Conftest Policy Check
         run: |
-          docker run --rm -v $(pwd):/project instrumenta/conftest test k8s/
+          docker run --rm \
+            -v $(pwd):/project \
+            instrumenta/conftest test k8s/ --policy policy/
