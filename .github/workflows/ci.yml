@@ -25,10 +25,10 @@ jobs:
         run: docker build -t my-app .
 
       # ========================
-      # SCA - Filesystem scan
+      # Trivy FS Scan (SCA)
       # ========================
       - name: Trivy FS Scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
           format: table
@@ -39,10 +39,10 @@ jobs:
           skip-files: .env
 
       # ========================
-      # Container Scan
+      # Trivy Image Scan
       # ========================
       - name: Trivy Image Scan
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: my-app
           format: table
